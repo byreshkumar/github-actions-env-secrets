@@ -10,8 +10,8 @@ jobs:
   test:
     env:
       MONGODB_CLUSTER_ADDRESS:  gha-mongo-cluster1.8x1emro.mongodb.net
-      # MONGODB_USERNAME: byreshk
-      # MONGODB_PASSWORD: 12MbfwGiiX4fouwY
+      MONGODB_USERNAME: ${{ secrets.MONGODB_USERNAME }}
+      MONGODB_PASSWORD: ${{ secrets.MONGODB_PASSWORD }}
       PORT: 8080
     # environment: testing
     runs-on: windows-latest
@@ -30,7 +30,7 @@ jobs:
       - name: Run tests
         run: npm test
       - name: Output information
-        run: echo "MONGODB_USERNAME- ${{ secrets.MONGODB_USERNAME }}"
+        run: echo "MONGODB_USERNAME- ${{ env.MONGODB_USERNAME }}"
   deploy:
     needs: test
     runs-on: ubuntu-latest

@@ -5,10 +5,10 @@ on:
       - main
       - dev
 env:
-  MONGODB_DB_NAME: gha-mongodb //workflow level
+  MONGODB_DB_NAME: gha-mongodb
 jobs:
   test:
-    env: // job level
+    env:
       MONGODB_CLUSTER_ADDRESS:  gha-mongo-cluster1.8x1emro.mongodb.net
       # MONGODB_USERNAME: byreshk
       # MONGODB_PASSWORD: 12MbfwGiiX4fouwY
@@ -30,12 +30,12 @@ jobs:
       - name: Run tests
         run: npm test
       - name: Output information
-        run: echo "MONGODB_USERNAME- ${{ secrets.MONGODB_USERNAME }}" //accessing env context
+        run: echo "MONGODB_USERNAME- ${{ secrets.MONGODB_USERNAME }}"
   deploy:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Output information
         run: |        
-          echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}" //not available here since this env is at test job level
-          echo "MONGODB_DB_NAME: ${{ env.MONGODB_DB_NAME }}" // print here since env at workflow level
+          echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
+          echo "MONGODB_DB_NAME: ${{ env.MONGODB_DB_NAME }}"

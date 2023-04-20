@@ -5,37 +5,37 @@ on:
       - main
       - dev
 env:
-  MONGODB_DB_NAME: gha-mongodb
+  MONGODB_DB_NAME: gha-mongodb //workflow level
 jobs:
   test:
-    env:
+    env: // job level
       MONGODB_CLUSTER_ADDRESS:  gha-mongo-cluster1.8x1emro.mongodb.net
-      MONGODB_USERNAME: byreshk
-      MONGODB_PASSWORD: 12MbfwGiiX4fouwY
+      # MONGODB_USERNAME: byreshk
+      # MONGODB_PASSWORD: 12MbfwGiiX4fouwY
       PORT: 8080
     # environment: testing
     runs-on: windows-latest
     steps:
       - name: Get Code
         uses: actions/checkout@v3
-      # - name: Cache dependencies
-      #   uses: actions/cache@v3
-      #   with:
-      #     path: ~/.npm
-      #     key: npm-deps-${{ hashFiles('**/package-lock.json') }}
-      # - name: Install dependencies
-      #   run: npm ci
+      - name: Cache dependencies
+        uses: actions/cache@v3
+        with:
+          path: ~/.npm
+          key: npm-deps-${{ hashFiles('**/package-lock.json') }}
+      - name: Install dependencies
+        run: npm ci
       - name: Run server
         run: npm start & npx wait-on http://127.0.0.1:$env:PORT
-      # - name: Run tests
-      #   run: npm test
+      - name: Run tests
+        run: npm test
       - name: Output information
-        run: echo "MONGODB_USERNAME- ${{ env.MONGODB_USERNAME }}"
+        run: echo "MONGODB_USERNAME- ${{ secrets.MONGODB_USERNAME }}" //accessing env context
   deploy:
     needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Output information
         run: |        
-          echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}"
-          echo "MONGODB_DB_NAME: ${{ env.MONGODB_DB_NAME }}" 
+          echo "MONGODB_USERNAME: ${{ env.MONGODB_USERNAME }}" //not available here since this env is at test job level
+          echo "MONGODB_DB_NAME: ${{ env.MONGODB_DB_NAME }}" // print here since env at workflow level
